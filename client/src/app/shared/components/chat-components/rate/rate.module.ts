@@ -1,6 +1,9 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RateComponent } from './rate.component';
+import { MatButtonModule } from '@angular/material/button';
+import { NgbRatingModule } from '@ng-bootstrap/ng-bootstrap';
+import { SharedModule } from '@app/shared/shared.module';
 
 
 
@@ -9,7 +12,9 @@ import { RateComponent } from './rate.component';
     RateComponent
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    MatButtonModule,
+    NgbRatingModule
   ],
   exports: [
     RateComponent

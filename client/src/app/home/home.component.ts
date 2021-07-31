@@ -1,12 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { AuthService } from '@app/core/services/auth.service';
-import { MessageOutputDto } from '@app/core/services/models/message-output-dto.model';
-import { MessageViewModel } from '@app/core/services/models/message-view.model';
-import { SocketConfigModel } from '@app/core/services/models/socket-config.model';
-import { UserDetailModel } from '@app/core/services/models/user-detail.model';
+import { MessageOutputDto } from '@app/core/models/message-output-dto.model';
+import { MessageViewModel } from '@app/core/models/message-view.model';
+import { SocketStatusModel } from '@app/core/models/socket-status.model';
+import { UserDetailModel } from '@app/core/models/user-detail.model';
 import { SocketIOService } from '@app/core/services/socketio.service';
-import { SocketIoConfig } from 'ngx-socket-io';
-
+import { SnackbarService } from '@app/core/services/snackbar.service';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -14,22 +13,24 @@ import { SocketIoConfig } from 'ngx-socket-io';
 })
 export class HomeComponent implements OnInit {
 
-  public config = new SocketConfigModel();
-
+  public socket = new SocketStatusModel();
   public inputText: string = '';
 
   public inputRows: MessageViewModel [] = [];
-
   public userDetail: UserDetailModel;
 
   constructor(
     private socketService: SocketIOService,
-    private authService: AuthService
+    private authService: AuthService,
+    private snackbarService: SnackbarService
   ) {
     this.userDetail = this.authService.getUserDetails();
     this.socketService.connect();
     this.socketService.onConnectionChange.subscribe((res) => {
-      this.config = this.socketService.config;
+      this.socket = this.socketService.config;
+      if(!res){
+         //  disconnected
+      }
     });
 
     this.socketService.onMessageReceived.subscribe((res) =>{
@@ -51,32 +52,46 @@ export class HomeComponent implements OnInit {
     if (status) {
       this.socketService.connect();
     } else {
-      this.socketService.disconnect()
+      this.socketService.disconnect();
     }
   }
 
   public handleCommand(): void {
-
-    if(this.inputText === '' || !this.config.connected) {
+    if(this.inputText === '' || !this.socket.connected) {
       return;
     }
-
     const output: MessageOutputDto = {
       author: this.userDetail.userName,
       message: this.inputText,
       command: null
     };
-
-    this.socketService.send(output);
-
+    this.socketService.sendMessage(output);
     this.inputRows.push({
       author: output.author,
       message: output.message,
       command: null,
       isLeft: false
     });
-
     this.inputText ='';
+  }
+
+
+  public onDayOptionSelected(date: string): void {
+    console.log('selected date', date);
+  }
+
+  public onCompleteOptionSelected(status: boolean): void {
+    if(status) {
+      this.toggleConnection(!status);
+    }
+  }
+
+  public onRateOptionSelected(rate: number): void {
+    console.log('your rate is', rate);
+  }
+
+  public clearChat(): void {
+    this.inputRows = [];
   }
 
 }

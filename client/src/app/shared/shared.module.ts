@@ -19,6 +19,7 @@ import { DayButtonsModule } from './components/chat-components/day-buttons/day-b
 import { MapModule } from './components/chat-components/map/map.module';
 import { RateModule } from './components/chat-components/rate/rate.module';
 import { CompleteModule } from './components/chat-components/complete/complete.module';
+import { NgbRatingModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [

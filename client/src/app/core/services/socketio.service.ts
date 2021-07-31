@@ -3,36 +3,41 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { Socket } from 'ngx-socket-io';
-import { SocketConfigModel } from './models/socket-config.model';
-import { COMMANDS } from '../constants/base-constants';
-import { MessageOutputDto as MessageOutputDto } from './models/message-output-dto.model';
+import { SocketStatusModel } from '@app/core/models/socket-status.model';
+import { COMMANDS } from '@app/core/constants/base-constants';
+import { MessageOutputDto as MessageOutputDto } from '@app/core/models/message-output-dto.model';
+import { SnackbarService } from './snackbar.service';
 
 @Injectable({ providedIn: 'root' })
 export class SocketIOService {
 
   private api = environment.api;
-  public config = new SocketConfigModel();
+  public config = new SocketStatusModel();
   private _socket: any;
   private commands = COMMANDS;
 
-  public onConnectionChange = new BehaviorSubject<boolean>(false);
+  public onConnectionChange = new Subject<boolean>();
   public onMessageReceived = new Subject<MessageOutputDto>();
 
   constructor(
     private http: HttpClient,
-    private socket: Socket
+    private socket: Socket,
+    private snackbarService: SnackbarService
   ) {
     this.socket.on('connect', () => {
       this.config.id = this._socket.id;
       this.config.connected = true;
       this.onConnectionChange.next(true);
+      this.snackbarService.success(`Connected ${this.config.id}`);
     });
 
     this.socket.on('disconnect', () => {
       this.config.id = null;
       this.config.connected = false;
       this.onConnectionChange.next(false);
+      this.snackbarService.error('Disconnected');
     });
+
 
     this.socket.on('msg-response', (response: MessageOutputDto) => {
       this.onMessageReceived.next(response);
@@ -54,7 +59,7 @@ export class SocketIOService {
     this.socket.disconnect();
   }
 
-  public send(output: MessageOutputDto): void {
+  public sendMessage(output: MessageOutputDto): void {
     const result = this.checkEventType(output.message);
     if (result) {
       this.socket.emit('command', output);

@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CompleteComponent } from './complete.component';
+import { MatButtonModule } from '@angular/material/button';
 
 
 
@@ -9,7 +10,8 @@ import { CompleteComponent } from './complete.component';
     CompleteComponent
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    MatButtonModule
   ],
   exports: [
     CompleteComponent

@@ -1,1 +1,12 @@
-<p>complete works!</p>
+<div class="" *ngIf="!optionSelected">
+  Want to Close the Connection?
+
+  <ng-container *ngFor="let d of data; let i = index">
+    <button mat-flat-button [color]="i === 0 ? 'primary' : 'secondary'" class="ms-2" (click)="handleConnection(i)">
+      {{d}}
+    </button>
+  </ng-container>
+</div>
+<div *ngIf="optionSelected">
+  <strong>{{userDetail.userName}}: </strong> {{option ? 'Yes':'No'}}
+</div>

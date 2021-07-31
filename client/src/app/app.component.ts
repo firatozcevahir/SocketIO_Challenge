@@ -12,16 +12,5 @@ export class AppComponent {
 
    constructor(
     private socketIoService: SocketIOService
-   ){
-
-    // this.socketIoService.hello().subscribe((res) =>{
-    //   console.log(res);
-    // });
-
-
-    // setInterval(() =>{
-    //   this.socketIoService.sendMessage(this.i);
-    //   this.i++;
-    // }, 200)
-   }
+   ){ }
 }

@@ -1,7 +1,7 @@
 import { HttpErrorResponse } from "@angular/common/http";
 import { ErrorHandler, Injectable } from "@angular/core";
 import { Router } from "@angular/router";
-import { SnackbarService } from "../services/snackbar.service";
+import { SnackbarService } from "@app/core/services/snackbar.service";
 
 @Injectable()
 export class GlobalErrorHandler implements ErrorHandler {

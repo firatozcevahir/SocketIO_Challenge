@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '@app/core/services/auth.service';
+import { SocketIOService } from '@app/core/services/socketio.service';
 
 @Component({
   selector: 'app-layout',
@@ -9,7 +10,8 @@ import { AuthService } from '@app/core/services/auth.service';
 export class LayoutComponent implements OnInit {
 
   constructor(
-    private authService: AuthService
+    private authService: AuthService,
+    private socketIOService: SocketIOService
 
   ) { }
 
@@ -17,6 +19,7 @@ export class LayoutComponent implements OnInit {
   }
 
   public logout(): void {
+    this.socketIOService.disconnect();
     this.authService.logout();
   }
 

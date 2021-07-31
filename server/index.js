@@ -23,26 +23,42 @@ app.use(
 
 // SOCKET IO
 io.on("connection", (socket) => {
-  console.log("user connected with id of " + socket.id);
+  console.log(`${socket.id}|connected`);
+  socket.emit('msg-response', {
+    author: 'ottonova bot',
+    message: 'You are now connected'
+  });
 
   socket.on("disconnect", () => {
-    console.log("user disconnected " + socket.id);
+    console.log(`${socket.id}|disconnected`);
   });
 
-  socket.on("message", (output) => {
-    const msgResponse = getMsgResponse(output);
+  socket.on("message", (input) => {
+    const msgResponse = getMsgResponse(input);
     socket.emit("msg-response", msgResponse);
+    console.log(`${socket.id}|${input.message}`)
   });
 
-  socket.on("command", (output) => {
-    const cmdResponse = getCmdResponse(output);
+  socket.on("option-select", (input) =>{
+    console.log(`${socket.id}|${input}`);
+  });
+
+  socket.on("command", (input) => {
+    const cmdResponse = getCmdResponse(input);
     socket.emit("cmd-response", cmdResponse);
-    console.log('cmd-response', cmdResponse);
+    console.log(`${socket.id}|${cmdResponse.command?.data}`);
   });
 });
 
-getCmdResponse = (output) => {
-  const type = commands.find((i) => i === output.message);
+
+getMsgResponse = (output) => {
+  return {
+    author: "ottonova bot",
+    message: `Hey ${output.author}, you said '${output.message}', right?`,
+  };
+};
+getCmdResponse = (input) => {
+  const type = commands.find((i) => i === input.message);
   let data;
   if (!type) {
     return {
@@ -50,26 +66,26 @@ getCmdResponse = (output) => {
       message: "Unrecognized command",
     };
   }
-  
-  switch(type) {
-    case 'date': {
+
+  switch (type) {
+    case "date": {
       data = new Date();
       break;
     }
-    case 'map': {
-      data = 'Map Data';
+    case "map": {
+      data = { lat: 36.87676, lng: 30.641101 };
       break;
     }
-    case 'rate': {
-      data = 'Rate Data';
+    case "rate": {
+      data = [1, 5];
       break;
     }
-    case 'complete': {
-      data = 'Complete Data';
+    case "complete": {
+      data = ["Yes", "No"];
       break;
     }
     default: {
-      data = new Date();
+      data = new Date().toString();
       break;
     }
   }
@@ -78,15 +94,8 @@ getCmdResponse = (output) => {
     author: "ottonova bot",
     command: {
       type,
-      data: data
-    }
-  };
-};
-
-getMsgResponse = (output) => {
-  return {
-    author: "ottonova bot",
-    message: `Hey ${output.author}, you said '${output.message}', right?`,
+      data: data,
+    },
   };
 };
 
@@ -95,7 +104,6 @@ getMsgResponse = (output) => {
 /// ENDPOINTS
 app.get("/hello", (req, res) => {
   res.send({ response: "hello" });
-  console.log("hello");
 });
 
 app.post("/login", (req, res) => {
@@ -104,12 +112,10 @@ app.post("/login", (req, res) => {
     (i) => i.userName === model.userName && i.password === model.password
   );
   if (result) {
-    console.log();
     res.send({ userName: model.userName });
   } else {
     res.status(400).send("Wrong Credentials");
   }
-  console.log("login");
 });
 //// //////////
 
