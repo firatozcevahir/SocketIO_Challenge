@@ -4,12 +4,7 @@ const http = require("http").Server(app);
 const cors = require("cors");
 const users = require("./core/data/users.json");
 
-const commands = [
-  "date", 
-  "rate", 
-  "map", 
-  "complete"
-];
+const commands = ["date", "rate", "map", "complete"];
 
 let connectedClientIds = [];
 
@@ -34,14 +29,14 @@ io.on("connection", (socket) => {
   connectedClientIds.push(socket.id);
 
   console.log(connectedClientIds);
-  socket.emit('msg-response', {
-    author: 'ottonova bot',
-    message: 'You are now connected'
+  socket.emit("msg-response", {
+    author: "ottonova bot",
+    message: "You are now connected",
   });
 
   socket.on("disconnect", () => {
-    const clientIndex = connectedClientIds.findIndex(i => i === socket.id);
-    if(clientIndex > -1) {
+    const clientIndex = connectedClientIds.findIndex((i) => i === socket.id);
+    if (clientIndex > -1) {
       connectedClientIds = connectedClientIds.slice(clientIndex, 1);
     }
     console.log(`${socket.id}|disconnected`);
@@ -50,10 +45,10 @@ io.on("connection", (socket) => {
   socket.on("message", (input) => {
     const msgResponse = getMsgResponse(input);
     socket.emit("msg-response", msgResponse);
-    console.log(`${socket.id}|${input.message}`)
+    console.log(`${socket.id}|${input.message}`);
   });
 
-  socket.on("option-select", (input) =>{
+  socket.on("option-select", (input) => {
     console.log(`${socket.id}|${input}`);
   });
 
@@ -64,13 +59,13 @@ io.on("connection", (socket) => {
   });
 });
 
-
 getMsgResponse = (output) => {
   return {
     author: "ottonova bot",
     message: `Hey ${output.author}, you said '${output.message}', right?`,
   };
 };
+
 getCmdResponse = (input) => {
   const type = commands.find((i) => i === input.message);
   let data;
@@ -122,13 +117,21 @@ app.get("/hello", (req, res) => {
 
 app.post("/login", (req, res) => {
   const model = req.body;
-  const result = users.find(
-    (i) => i.userName === model.userName && i.password === model.password
-  );
+  const result = users.find((i) => i.userName === model.userName && i.password === model.password);
   if (result) {
-    res.send({ userName: model.userName });
+    res.send({ id: result.id, userName: result.userName });
   } else {
     res.status(400).send("Wrong Credentials");
+  }
+});
+
+app.get("/getUserDetails/:id", (req, res) =>{
+  const model = req.params;
+  const result = users.find(i => i.id === model.id);
+  if(result){
+    res.send({ id: result.id, userName: result.userName});
+  }else {
+    res.status(403).send("User not Authenticated");
   }
 });
 //// //////////

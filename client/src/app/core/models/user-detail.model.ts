@@ -1,3 +1,4 @@
-export interface UserDetailModel {
-  userName: string;
+export class UserDetailModel {
+  public id!: string;
+  public userName!: string;
 }
