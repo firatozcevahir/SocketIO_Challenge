@@ -1,12 +1,13 @@
 <div *ngIf="!optionSelected">
   Please Rate Me!
-  <ng-container *ngFor="let rate of rates">
-    <button mat-flat-button color="secondary" class="ms-2" (click)="rateConversation(rate)">
-      {{rate}}
-    </button>
-  </ng-container>
 </div>
 <div *ngIf="optionSelected">
-  <strong>{{userDetail.userName}}: </strong> You Rated us {{option}}
+   Thanks for rating us <strong> {{userDetail.userName}} </strong>
 </div>
-<ngb-rating [rate]="0"></ngb-rating>
+<ngb-rating [(rate)]="option" [max]="data[1]" [readonly]="optionSelected" (rateChange)="rateConversation($event)">
+  <ng-template let-fill="fill">
+    <span class="star" [class.full]="fill === 100">
+      &starf;
+    </span>
+  </ng-template>
+</ngb-rating>

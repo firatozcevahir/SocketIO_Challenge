@@ -37,4 +37,5 @@ export class RateComponent implements OnInit {
     this.onOptionSelected.emit(this.option);
   }
 
+
 }
