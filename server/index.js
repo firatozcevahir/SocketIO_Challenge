@@ -6,6 +6,8 @@ const users = require("./core/data/users.json");
 
 const commands = ["date", "rate", "map", "complete"];
 
+let clientCommands = [];
+
 let connectedClientIds = [];
 
 const io = require("socket.io")(http, {
@@ -49,26 +51,26 @@ io.on("connection", (socket) => {
   });
 
   socket.on("option-select", (input) => {
-    console.log(`${socket.id}|${input}`);
+    console.log("optionSelect");
+    console.log(`${socket.id}|${input.userId}|${input.type}|${input.option}`);
   });
 
   socket.on("command", (input) => {
     const cmdResponse = getCmdResponse(input);
     socket.emit("cmd-response", cmdResponse);
-    console.log(`${socket.id}|${cmdResponse.command?.data}`);
   });
 });
 
-getMsgResponse = (output) => {
+const getMsgResponse = (output) => {
   return {
     author: "ottonova bot",
     message: `Hey ${output.author}, you said '${output.message}', right?`,
   };
 };
 
-getCmdResponse = (input) => {
+const getCmdResponse = (input) => {
   const type = commands.find((i) => i === input.message);
-  let data;
+
   if (!type) {
     return {
       author: "ottonova bot",
@@ -76,6 +78,31 @@ getCmdResponse = (input) => {
     };
   }
 
+  const cmdMessage =
+    type === "date"
+      ? "You already selected a date"
+      : type === "rate"
+      ? "You already rated me"
+      : type === "map"
+      ? "I already showed you the map"
+      : "There is no such command";
+
+  if (
+    clientCommands.find((i) => i.type === type && i.userId === input.userId)
+  ) {
+    console.log("command already Executed");
+    return {
+      author: "ottonova bot",
+      message: cmdMessage,
+    };
+  }
+
+  const foundUser = users.find((i) => i.id === input.userId);
+  if (type !== "complete") {
+    clientCommands.push({ userId: foundUser.id, type });
+  }
+
+  let data;
   switch (type) {
     case "date": {
       data = new Date();
@@ -117,7 +144,9 @@ app.get("/hello", (req, res) => {
 
 app.post("/login", (req, res) => {
   const model = req.body;
-  const result = users.find((i) => i.userName === model.userName && i.password === model.password);
+  const result = users.find(
+    (i) => i.userName === model.userName && i.password === model.password
+  );
   if (result) {
     res.send({ id: result.id, userName: result.userName });
   } else {
@@ -125,13 +154,26 @@ app.post("/login", (req, res) => {
   }
 });
 
-app.get("/getUserDetails/:id", (req, res) =>{
+app.get("/getUserDetails/:id", (req, res) => {
   const model = req.params;
-  const result = users.find(i => i.id === model.id);
-  if(result){
-    res.send({ id: result.id, userName: result.userName});
-  }else {
+  const result = users.find((i) => i.id === model.id);
+  if (result) {
+    res.send({ id: result.id, userName: result.userName });
+  } else {
     res.status(403).send("User not Authenticated");
+  }
+});
+
+app.post("/logout", (req, res) => {
+  const model = req.body;
+  const result = users.find((i) => i.id === model.id);
+  if (result) {
+    clientCommands = clientCommands.filter(
+      (i) => i.userId !== result.id
+    );
+    res.send({ message: "User Logged Out"});
+  } else {
+    res.status(400).send("User not Found");
   }
 });
 //// //////////

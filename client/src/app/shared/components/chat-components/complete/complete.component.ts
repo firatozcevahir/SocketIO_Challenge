@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { UserDetailModel } from '@app/core/models/user-detail.model';
 import { AuthService } from '@app/core/services/auth.service';
+import { SocketIOService } from '@app/core/services/socketio.service';
 
 @Component({
   selector: 'app-complete',
@@ -17,11 +18,11 @@ export class CompleteComponent implements OnInit {
   public userDetail!: UserDetailModel;
 
   constructor(
-    private authService: AuthService
-    ) {
-
+    private authService: AuthService,
+    private socketService: SocketIOService
+  ) {
     this.userDetail = this.authService.getUserDetails();
-     }
+  }
 
   ngOnInit(): void {
   }

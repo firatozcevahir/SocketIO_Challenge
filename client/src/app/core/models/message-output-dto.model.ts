@@ -1,4 +1,5 @@
 export class MessageOutputDto {
+  public userId!: string;
   public author!: string;
   public message!: string;
   public command!: CommandModel | null;

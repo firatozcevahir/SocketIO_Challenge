@@ -7,6 +7,7 @@ import { SocketStatusModel } from '@app/core/models/socket-status.model';
 import { COMMANDS } from '@app/core/constants/base-constants';
 import { MessageOutputDto as MessageOutputDto } from '@app/core/models/message-output-dto.model';
 import { SnackbarService } from './snackbar.service';
+import { OptionOutputDto } from '../models/option-output-dto.model';
 
 @Injectable({ providedIn: 'root' })
 export class SocketIOService {
@@ -66,6 +67,10 @@ export class SocketIOService {
     } else {
       this.socket.emit('message', output);
     }
+  }
+
+  public sendOption(output: OptionOutputDto): void {
+    this.socket.emit('option-select', output);
   }
 
   private checkEventType(msg: string): boolean {

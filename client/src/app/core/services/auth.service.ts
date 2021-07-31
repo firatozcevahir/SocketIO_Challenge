@@ -6,6 +6,7 @@ import { environment } from '@env/environment';
 import { LoginDto } from '@models/login-dto.model';
 import { Router } from '@angular/router';
 import { UserDetailModel } from '@app/core/models/user-detail.model';
+import { SnackbarService } from './snackbar.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -15,7 +16,8 @@ export class AuthService {
 
   constructor(
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    private snackbarService: SnackbarService
   ) { }
 
 
@@ -39,9 +41,15 @@ export class AuthService {
   }
 
   public logout(): void {
-    localStorage.clear();
-    this.authentication = false;
-    this.router.navigate(['/auth']);
+    this.http.post<any>(`${this.api}/logout`, { id: this.getUserDetails().id})
+      .subscribe(
+        (res => {
+          localStorage.clear();
+          this.authentication = false;
+          this.snackbarService.success(res.message);
+          this.router.navigate(['/auth']);
+        })
+      );
   }
 
 

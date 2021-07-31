@@ -57,14 +57,18 @@ export class HomeComponent implements OnInit {
   }
 
   public handleCommand(): void {
+
     if(this.inputText === '' || !this.socket.connected) {
       return;
     }
+
     const output: MessageOutputDto = {
+      userId: this.userDetail.id,
       author: this.userDetail.userName,
       message: this.inputText,
       command: null
     };
+
     this.socketService.sendMessage(output);
     this.inputRows.push({
       author: output.author,
@@ -72,22 +76,36 @@ export class HomeComponent implements OnInit {
       command: null,
       isLeft: false
     });
+
     this.inputText ='';
   }
 
 
   public onDayOptionSelected(date: string): void {
-    console.log('selected date', date);
+    this.socketService.sendOption({
+      userId: this.userDetail.id,
+      option: date,
+      type: 'date'
+    });
   }
 
   public onCompleteOptionSelected(status: boolean): void {
+    this.socketService.sendOption({
+      userId: this.userDetail.id,
+      option: status,
+      type: 'complete'
+    });
     if(status) {
       this.toggleConnection(!status);
     }
   }
 
   public onRateOptionSelected(rate: number): void {
-    console.log('your rate is', rate);
+    this.socketService.sendOption({
+      userId: this.userDetail.id,
+      option: rate,
+      type: 'rate'
+    });
   }
 
   public clearChat(): void {
