@@ -12,16 +12,14 @@ const routes: Routes = [
     loadChildren: () => import('./auth/login/login.module').then(m => m.LoginModule),
     canActivate: [TokenGuard]
   }, {
-    path: '**',
-    component: HomeComponent,
-    loadChildren: () => import('./home/home.module').then(m => m.HomeModule),
+    path: '',
+    loadChildren: () => import('./layout/layout.module').then(m => m.LayoutModule),
     canActivate: [AuthGuard]
   }
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, {
-  })],
+  imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

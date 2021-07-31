@@ -5,6 +5,7 @@ import { map } from 'rxjs/operators';
 import { environment } from '@env/environment';
 import { LoginDto } from '@models/login-dto.model';
 import { Router } from '@angular/router';
+import { UserDetailModel } from './models/user-detail.model';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -19,7 +20,7 @@ export class AuthService {
 
 
   public authenticated(): boolean {
-    if(this.authentication){
+    if (this.authentication) {
       return true;
     }
     const result = localStorage.getItem('auth');
@@ -39,7 +40,8 @@ export class AuthService {
 
   public logout(): void {
     localStorage.clear();
-    this.router.navigate(['/auth']).then();
+    this.authentication = false;
+    this.router.navigate(['/auth']);
   }
 
 
@@ -53,4 +55,8 @@ export class AuthService {
     return response;
   }
 
+  public getUserDetails(): UserDetailModel {
+    const result = localStorage.getItem('auth');
+    return result ? JSON.parse(result) : null;
+  }
 }

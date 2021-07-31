@@ -14,7 +14,7 @@ export class TokenGuard implements CanActivate {
   canActivate() {
     const res = this.authService.authenticated();
     if (res) {
-      this.router.navigate(['/home']).then();
+      this.router.navigate(['/']).then();
       return false;
     } else {
       return true;

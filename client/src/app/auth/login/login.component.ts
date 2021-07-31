@@ -27,7 +27,6 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
 
     this.authService.hello().subscribe((res) =>{
-      console.log(res);
     });
   }
 
@@ -45,9 +44,7 @@ export class LoginComponent implements OnInit {
     this.authService
       .login(model)
       .subscribe((res) =>
-      this.router.navigate(['/']), (err) => {
-        console.log(err.error);
-      });
+      this.router.navigate(['/home']));
   }
 
 }

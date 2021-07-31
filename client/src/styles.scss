@@ -2,3 +2,17 @@
 @import "~@angular/material/theming";
 @import "~bootstrap/scss/bootstrap.scss";
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.success-snackbar {
+  background: #09c27b;
+  color: #fff;
+}
+
+.error-snackbar {
+  background: #c20909;
+  color: #fff;
+}

@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { NgModule } from '@angular/core';
+import { ErrorHandler, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { SocketIoConfig, SocketIoModule } from 'ngx-socket-io';
 import { environment } from 'src/environments/environment';
@@ -10,8 +10,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { GlobalErrorHandler } from './core/handlers/global-error-handler';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
-const config: SocketIoConfig = { url: environment.socketApi, options: {} };
+const config: SocketIoConfig = { url: environment.socketApi, options: { autoConnect: false, path: '/socket'} };
 
 @NgModule({
   declarations: [
@@ -25,9 +27,12 @@ const config: SocketIoConfig = { url: environment.socketApi, options: {} };
     HttpClientModule,
     CommonModule,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    MatSnackBarModule
   ],
-  providers: [],
+  providers: [
+    {provide: ErrorHandler, useClass: GlobalErrorHandler}
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,0 +1,13 @@
+.chat-panel {
+  height:200px;
+  overflow: auto;
+  .chat-message {
+    border: 1px solid #bebebe81;
+  }
+  .server {
+    background: #d4e2f7;
+  }
+  .client {
+    background: #cfefed;
+  }
+}

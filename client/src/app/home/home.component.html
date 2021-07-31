@@ -1,1 +1,55 @@
-<p>home works!</p>
+<div class="row">
+  <div class="col">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>{{config.id || 'Not Connected'}}</mat-card-title>
+        <mat-card-subtitle>{{config.connected ? 'connected': 'disconnected'}}</mat-card-subtitle>
+        <div class="spacer"></div>
+        <button mat-icon-button *ngIf="!config.connected" (click)="toggleConnection(true)">
+          <mat-icon>refresh</mat-icon>
+        </button>
+        <button mat-icon-button *ngIf="config.connected" (click)="toggleConnection(false)">
+          <mat-icon>cancel</mat-icon>
+        </button>
+      </mat-card-header>
+      <mat-card-content>
+
+        <div class="col w-100 text-start p-3 chat-panel">
+          <ng-container *ngFor="let row of inputRows">
+            <div [ngClass]="row.isLeft ? 'float-start server' : 'float-end client'"
+              class="col p-3 rounded mt-3 chat-message">
+
+              <strong>{{row.author}}:</strong>
+
+              <!-- Handle messages here-->
+              <ng-container *ngIf="row.message">
+                {{row.message}}
+              </ng-container>
+
+              <!-- Handle commands here-->
+              <ng-container *ngIf="row.command">
+                <div *ngIf="row.command.type === 'date'">
+                  <app-day-buttons [data]="row.command.data"></app-day-buttons>
+                </div>
+                <div *ngIf="row.command.type === 'map'">
+                  <app-map [data]="row.command.data"></app-map>
+                </div>
+                <div *ngIf="row.command.type === 'complete'">
+                  <app-complete [data]="row.command.data"></app-complete>
+                </div>
+                <div *ngIf="row.command.type === 'rate'">
+                  <app-rate [data]="row.command.data"></app-rate>
+                </div>
+              </ng-container>
+            </div>
+
+            <div class="clearfix"></div>
+
+          </ng-container>
+        </div>
+        <input type="text" class="form-control" [(ngModel)]="inputText" (keyup.enter)="handleCommand()">
+      </mat-card-content>
+    </mat-card>
+
+  </div>
+</div>

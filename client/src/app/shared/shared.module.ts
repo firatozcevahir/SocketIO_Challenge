@@ -1,6 +1,6 @@
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 import { MatIconModule } from '@angular/material/icon';
@@ -15,10 +15,14 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { BrowserModule } from '@angular/platform-browser';
+import { DayButtonsModule } from './components/day-buttons/day-buttons.module';
+import { MapModule } from './components/map/map.module';
+import { RateModule } from './components/rate/rate.module';
+import { CompleteModule } from './components/complete/complete.module';
 
 @NgModule({
   declarations: [
+
   ],
   exports: [
     CommonModule,
@@ -35,7 +39,11 @@ import { BrowserModule } from '@angular/platform-browser';
     MatSlideToggleModule,
     MatSelectModule,
     MatOptionModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    DayButtonsModule,
+    MapModule,
+    RateModule,
+    CompleteModule
   ],
   providers: [
   ]
