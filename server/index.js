@@ -4,7 +4,14 @@ const http = require("http").Server(app);
 const cors = require("cors");
 const users = require("./core/data/users.json");
 
-const commands = ["date", "rate", "map", "complete"];
+const commands = [
+  "date", 
+  "rate", 
+  "map", 
+  "complete"
+];
+
+let connectedClientIds = [];
 
 const io = require("socket.io")(http, {
   path: "/socket",
@@ -24,12 +31,19 @@ app.use(
 // SOCKET IO
 io.on("connection", (socket) => {
   console.log(`${socket.id}|connected`);
+  connectedClientIds.push(socket.id);
+
+  console.log(connectedClientIds);
   socket.emit('msg-response', {
     author: 'ottonova bot',
     message: 'You are now connected'
   });
 
   socket.on("disconnect", () => {
+    const clientIndex = connectedClientIds.findIndex(i => i === socket.id);
+    if(clientIndex > -1) {
+      connectedClientIds = connectedClientIds.slice(clientIndex, 1);
+    }
     console.log(`${socket.id}|disconnected`);
   });
 
@@ -77,7 +91,7 @@ getCmdResponse = (input) => {
       break;
     }
     case "rate": {
-      data = [1, 5];
+      data = [1, 8];
       break;
     }
     case "complete": {
