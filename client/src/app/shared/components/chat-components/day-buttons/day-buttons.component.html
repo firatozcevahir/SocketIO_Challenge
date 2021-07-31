@@ -1,7 +1,7 @@
 <div *ngIf="!optionSelected">
-  Please select a Date
+  <div class="mb-3">Please select a Date</div>
   <ng-container *ngFor="let date of dates; let i = index">
-    <button mat-flat-button color="secondary" class="ms-2" (click)="selectDay(i)">
+    <button mat-flat-button color="secondary" class="me-2" (click)="selectDay(i)">
       {{date.day}}
     </button>
   </ng-container>

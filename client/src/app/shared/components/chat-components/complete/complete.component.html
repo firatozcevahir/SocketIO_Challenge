@@ -1,8 +1,8 @@
 <div class="" *ngIf="!optionSelected">
-  Want to Close the Connection?
+  <div class="mb-3"> Want to Close the Connection?</div>
 
   <ng-container *ngFor="let d of data; let i = index">
-    <button mat-flat-button [color]="i === 0 ? 'primary' : 'secondary'" class="ms-2" (click)="handleConnection(i)">
+    <button mat-flat-button [color]="i === 0 ? 'primary' : 'secondary'" class="me-2" (click)="handleConnection(i)">
       {{d}}
     </button>
   </ng-container>
