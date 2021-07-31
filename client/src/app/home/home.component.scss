@@ -24,4 +24,19 @@
     color: #b9b9b9;
     font-weight: bold;
   }
+  &::-webkit-scrollbar {
+    width: 7px;
+    height: 7px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+
+	border-radius: 10px;
+	box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+	background-color: #afafaf;
+
+    &:hover {
+      background: #8b8b8b;
+    }
+  }
 }

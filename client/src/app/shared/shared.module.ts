@@ -20,10 +20,12 @@ import { MapModule } from './components/chat-components/map/map.module';
 import { RateModule } from './components/chat-components/rate/rate.module';
 import { CompleteModule } from './components/chat-components/complete/complete.module';
 import { NgbRatingModule } from '@ng-bootstrap/ng-bootstrap';
+import { ChatInfoDialogComponent } from './components/dialogs/chat-info-dialog/chat-info-dialog.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { ChatInfoDialogModule } from './components/dialogs/chat-info-dialog/chat-info-dialog.module';
 
 @NgModule({
   declarations: [
-
   ],
   exports: [
     CommonModule,
@@ -41,10 +43,12 @@ import { NgbRatingModule } from '@ng-bootstrap/ng-bootstrap';
     MatSelectModule,
     MatOptionModule,
     MatProgressSpinnerModule,
+    MatDialogModule,
     DayButtonsModule,
     MapModule,
     RateModule,
-    CompleteModule
+    CompleteModule,
+    ChatInfoDialogModule
   ],
   providers: [
   ]

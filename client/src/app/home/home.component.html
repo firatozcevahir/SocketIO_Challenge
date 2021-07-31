@@ -16,11 +16,14 @@
           <button mat-menu-item *ngIf="inputRows.length" (click)="clearChat()">
             <mat-icon>clear_all</mat-icon><span>Clear Chat History</span>
           </button>
+          <button mat-menu-item (click)="showInfo()">
+            <mat-icon>info</mat-icon><span>Info</span>
+          </button>
         </mat-menu>
       </mat-card-header>
       <mat-card-content>
 
-        <div class="col w-100 text-start p-3 chat-panel" #chatPanel>
+        <div class="col w-100 text-start p-3 chat-panel" #chatPanelEl>
           <ng-container *ngFor="let row of inputRows">
             <div
               [ngClass]="[row.isLeft ? 'float-start server' : 'float-end client', row.command?.type === 'map' ? 'w-100': '']"
@@ -47,22 +50,22 @@
                 </div>
               </ng-container>
 
-              <div class="author">- {{row.author}}</div>
+              <div class="author">{{row.author}}</div>
             </div>
             <div class="clearfix"></div>
           </ng-container>
           <div *ngIf="!socket.connected" class="dc-overlay d-flex align-items-center">
             <div class="text-center w-100 text-big">
               Disconnected
-
               <button mat-stroked-button *ngIf="!socket.connected" (click)="toggleConnection(true)">
                 Click to Reconnect
               </button>
             </div>
           </div>
         </div>
-        <input type="text" class="form-control" [(ngModel)]="inputText" (keyup.enter)="handleCommand()"
+        <input type="text" class="form-control mt-2" [(ngModel)]="inputText" #inputTextEl (keyup.enter)="handleCommand()"
           [disabled]="!socket.connected"
+          autofocus
           [placeholder]="socket.connected ? 'Start writing text or command...' : 'Not Connected'">
       </mat-card-content>
     </mat-card>

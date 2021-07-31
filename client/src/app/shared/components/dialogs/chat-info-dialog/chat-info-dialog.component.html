@@ -1,0 +1,8 @@
+<div mat-dialog-content>
+  <strong>Available Commands</strong>
+  <div class="col mt-2">
+  <ng-container *ngFor="let command of commands">
+    <button mat-stroked-button class="me-2" (click)="selectCommand(command)">{{command}}</button>
+  </ng-container>
+</div>
+</div>

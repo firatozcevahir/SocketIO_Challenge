@@ -1,39 +1,52 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { AuthService } from '@app/core/services/auth.service';
 import { MessageOutputDto } from '@app/core/models/message-output-dto.model';
 import { MessageViewModel } from '@app/core/models/message-view.model';
 import { SocketStatusModel } from '@app/core/models/socket-status.model';
 import { UserDetailModel } from '@app/core/models/user-detail.model';
 import { SocketIOService } from '@app/core/services/socketio.service';
-import { SnackbarService } from '@app/core/services/snackbar.service';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { ChatInfoDialogComponent } from '@app/shared/components/dialogs/chat-info-dialog/chat-info-dialog.component';
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, AfterViewInit {
+
+
+  @ViewChild('chatPanelEl') private chatPanelEl!: ElementRef;
+  @ViewChild('inputTextEl') private inputEl!: ElementRef;
+
 
   public socket = new SocketStatusModel();
   public inputText: string = '';
 
-  public inputRows: MessageViewModel [] = [];
+  public inputRows: MessageViewModel[] = [];
   public userDetail: UserDetailModel;
 
   constructor(
     private socketService: SocketIOService,
     private authService: AuthService,
-    private snackbarService: SnackbarService
+    private dialog: MatDialog
   ) {
     this.userDetail = this.authService.getUserDetails();
     this.socketService.connect();
     this.socketService.onConnectionChange.subscribe((res) => {
       this.socket = this.socketService.config;
-      if(!res){
-         //  disconnected
+      if (!res) {
+        //  disconnected
       }
     });
+  }
 
-    this.socketService.onMessageReceived.subscribe((res) =>{
+  ngOnInit(): void {
+  }
+
+  ngAfterViewInit(): void {
+
+    this.socketService.onMessageReceived.subscribe((res) => {
       const item = {
         author: res.author,
         message: res.message,
@@ -42,10 +55,10 @@ export class HomeComponent implements OnInit {
       };
       this.inputRows.push(item);
       console.log(item);
+      setTimeout(() =>{
+        this.chatPanelEl.nativeElement.scrollTop = this.chatPanelEl.nativeElement.scrollHeight;
+      });
     });
-  }
-
-  ngOnInit(): void {
   }
 
   public toggleConnection(status: boolean): void {
@@ -58,7 +71,7 @@ export class HomeComponent implements OnInit {
 
   public handleCommand(): void {
 
-    if(this.inputText === '' || !this.socket.connected) {
+    if (this.inputText === '' || !this.socket.connected) {
       return;
     }
 
@@ -77,9 +90,8 @@ export class HomeComponent implements OnInit {
       isLeft: false
     });
 
-    this.inputText ='';
+    this.inputText = '';
   }
-
 
   public onDayOptionSelected(date: string): void {
     this.socketService.sendOption({
@@ -95,7 +107,7 @@ export class HomeComponent implements OnInit {
       option: status,
       type: 'complete'
     });
-    if(status) {
+    if (status) {
       this.toggleConnection(!status);
     }
   }
@@ -112,4 +124,16 @@ export class HomeComponent implements OnInit {
     this.inputRows = [];
   }
 
+  public showInfo(): void {
+    this.dialog.open(ChatInfoDialogComponent, {
+      width: '450px',
+      hasBackdrop: true,
+      autoFocus: false
+    }).afterClosed().subscribe(res => {
+      if (res) {
+        this.inputText = res;
+        this.inputEl.nativeElement.focus();
+      }
+    });
+  }
 }
