@@ -23,6 +23,7 @@ import { NgbRatingModule } from '@ng-bootstrap/ng-bootstrap';
 import { ChatInfoDialogComponent } from './components/dialogs/chat-info-dialog/chat-info-dialog.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ChatInfoDialogModule } from './components/dialogs/chat-info-dialog/chat-info-dialog.module';
+import { ConfirmDialogModule } from './components/dialogs/confirm-dialog/confirm-dialog.module';
 
 @NgModule({
   declarations: [
@@ -48,7 +49,8 @@ import { ChatInfoDialogModule } from './components/dialogs/chat-info-dialog/chat
     MapModule,
     RateModule,
     CompleteModule,
-    ChatInfoDialogModule
+    ChatInfoDialogModule,
+    ConfirmDialogModule
   ],
   providers: [
   ]
