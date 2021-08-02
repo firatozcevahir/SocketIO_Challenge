@@ -8,9 +8,6 @@ import { SocketIOService } from './core/services/socketio.service';
 export class AppComponent {
   title = 'socketio-client';
 
-  private i = 0;
-
    constructor(
-    private socketIoService: SocketIOService
    ){ }
 }

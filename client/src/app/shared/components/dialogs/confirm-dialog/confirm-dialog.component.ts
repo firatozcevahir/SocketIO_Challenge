@@ -14,13 +14,8 @@ export class ConfirmDialogComponent implements OnInit {
     public dialogRef: MatDialogRef<ConfirmDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
-    if (this.data.title) {
-      this.title = this.data.title;
-    }
-
-    if (this.data.message) {
-      this.message = this.data.message;
-    }
+    this.title = this.data.title || this.title;
+    this.message = this.data.message || this.message;
   }
 
   ngOnInit(): void {
