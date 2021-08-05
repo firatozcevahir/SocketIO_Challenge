@@ -3,6 +3,7 @@ const app = express();
 const http = require("http").Server(app);
 const cors = require("cors");
 const users = require("./core/data/users.json");
+const config = require("./core/config.json");
 
 const commands = ["date", "rate", "map", "complete"];
 
@@ -21,7 +22,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
   cors({
-    origin: "http://localhost:4200",
+    origin: config.clientApp,
   })
 );
 
@@ -51,13 +52,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("option-select", (input) => {
-    console.log("optionSelect");
-
-    const foundUser = users.find((i) => i.id === input.userId);
-    if (input.type !== "complete" && !clientCommands.find((i) => i.type === input.type && i.userId === input.userId)) {
-      clientCommands.push({ userId: foundUser.id, type: input.type });
-      console.log(`${socket.id}|${input.userId}|${input.type}|${input.option}`);
-    }
+    console.log(`OPTIONSELECTED:${socket.id}|${input.userId}|${input.type}|${input.option}`);
   });
 
   socket.on("command", (input) => {
@@ -93,10 +88,17 @@ const getCmdResponse = (input) => {
       : "There is no such command";
 
   if (clientCommands.find((i) => i.type === type && i.userId === input.userId)) {
+    console.log("command already Executed");
     return {
       author: "ottonova bot",
       message: cmdMessage,
     };
+  }
+
+  
+  const foundUser = users.find((i) => i.id === input.userId);
+  if (type !== "complete") {
+    clientCommands.push({ userId: foundUser.id, type });
   }
 
   let data;
