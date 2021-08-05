@@ -3,6 +3,7 @@
 The client project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 12.1.4.
 
 **Running the client:**
+
 In client's root folder, run **npm i** to install dependencies. Then run **ng serve** to run the project.
 
 ---Client app will use port **4200** by default.
