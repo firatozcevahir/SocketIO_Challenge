@@ -13,7 +13,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { GlobalErrorHandler } from './core/handlers/global-error-handler';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 
-const config: SocketIoConfig = { url: environment.socketApi, options: { autoConnect: false, path: '/socket'} };
+const config: SocketIoConfig = { url: environment.socketApi, options: { autoConnect: false, path: environment.socketPath} };
 
 @NgModule({
   declarations: [

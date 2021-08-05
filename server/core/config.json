@@ -1,3 +1,5 @@
 {
-    "clientApp": "http://localhost:4200"
+    "clientApp": "http://localhost:4200",
+    "serverPort": 3000,
+    "socketPath": "/socket"
 }

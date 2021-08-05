@@ -12,9 +12,9 @@ let clientCommands = [];
 let connectedClientIds = [];
 
 const io = require("socket.io")(http, {
-  path: "/socket",
+  path: config.socketPath,
   cors: {
-    origin: "http://localhost:4200",
+    origin: config.clientApp,
   },
 });
 
@@ -177,4 +177,4 @@ app.post("/logout", (req, res) => {
 });
 //// //////////
 
-http.listen(3000, () => console.error("listening on http://localhost:3000/"));
+http.listen(config.serverPort, () => console.log(`listening on http://localhost:${config.serverPort}/`));
